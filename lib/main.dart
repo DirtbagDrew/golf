@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import 'widgets/VideoPlayerController.dart';
 import 'widgets/VideoSelector.dart';
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -20,11 +19,9 @@ class MyApp extends StatelessWidget {
       title: 'Welcome to Flutter',
       home: Scaffold(
         body: Center(
-          child: VideoSelector(),
+          child: VideoPlayerApp(),
         ),
       ),
     );
   }
 }
-
-
