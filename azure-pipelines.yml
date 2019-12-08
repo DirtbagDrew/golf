@@ -10,15 +10,44 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: | 
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-    test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-    test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-    test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
-    echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
-    sudo apt-get install build-essential curl file git
+- task: CmdLine@2
+  inputs:
+    script: |
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+      test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
+      test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+      test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
+      echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
+      sudo apt-get install build-essential curl file git
   displayName: 'Install homebrew'
-- script: brew cask install fastlane
+- task: CmdLine@2
+  inputs:
+    script: |
+      brew cask install fastlane
   displayName: 'install fastlane'
-- script: flutter build apk --release;
-  displayName: 'build project'
+- task: CmdLine@2
+  inputs:
+    script: |
+      fastlane init
+    workingDirectory: '$(System.DefaultWorkingDirectory)/android'
+  displayName: 'initalize android project'
+- task: CmdLine@2
+  inputs:
+    script: flutter build apk --release;
+  displayName: 'build android project'
+- task: CmdLine@2
+  inputs:
+    script: flutter build ios --release --no-codesign.
+  displayName: 'Build ios project'
+- task: CmdLine@2
+  inputs:
+    script: |
+      fastlane init
+    workingDirectory: '$(System.DefaultWorkingDirectory)/android'
+  displayName: 'initalize android project'
+- task: CmdLine@2
+  inputs:
+    script: |
+      fastlane init
+    workingDirectory: '$(System.DefaultWorkingDirectory)/ios'
+  displayName: 'initalize ios project'
