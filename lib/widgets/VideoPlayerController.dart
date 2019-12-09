@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
 
 class VideoPlayerApp extends StatelessWidget {
   @override
@@ -24,6 +26,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   File _video;
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
+  bool _dialVisible;
 
   changeVideo(String type, String videoString) {
     _controller.pause();
@@ -120,42 +123,47 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           }
         },
       ),
-      floatingActionButton: PopupMenuButton(
-        elevation: 10.0,
-        child: Icon(Icons.add, color: Colors.black),
-        color: Colors.green,
-        onSelected: _select,
-        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-          const PopupMenuItem<String>(
-            value: 'gallery',
-            child: Icon(Icons.video_library),
-          ),
-          const PopupMenuItem<String>(
-            value: 'camera',
-            child: Icon(Icons.videocam),
-          ),
-        ],
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Wrap the play or pause in a call to `setState`. This ensures the
-      //     // correct icon is shown.
-      //     setState(() {
-      //     changeVideo('network','https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4');
-      //       // If the video is playing, pause it.
-      //       // if (_controller.value.isPlaying) {
-      //         // _controller.pause();
-      //       // } else {
-      //         // If the video is paused, play it.
-      //         // _controller.play();
-      //       // }
-      //     });
-      //   },
-      //   // Display the correct icon depending on the state of the player.
-      //   child: Icon(
-      //     _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-      //   ),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: SpeedDial(
+          // child: Icon(Icons.add, color: Colors.black),
+          // both default to 16
+          marginRight: 18,
+          marginBottom: 20,
+          animatedIcon: AnimatedIcons.menu_close,
+          animatedIconTheme: IconThemeData(size: 22.0),
+          // this is ignored if animatedIcon is non null
+          child: Icon(Icons.add),
+          visible: true,
+          // If true user is forced to close dial manually 
+          // by tapping main button and overlay is not rendered.
+          closeManually: false,
+          curve: Curves.bounceIn,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          onOpen: () => print('OPENING DIAL'),
+          onClose: () => print('DIAL CLOSED'),
+          tooltip: 'Speed Dial',
+          heroTag: 'speed-dial-hero-tag',
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 8.0,
+          shape: CircleBorder(),
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.video_library),
+              backgroundColor: Colors.red,
+              label: 'gallery',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => _pickVideoFromGallery()
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.videocam),
+              backgroundColor: Colors.blue,
+              label: 'camera',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => _pickVideoFromCamera(),
+            ),
+          ],
+        ),
     );
   }
 }
