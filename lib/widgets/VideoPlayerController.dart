@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-
 class VideoPlayerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   File _video;
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
-  bool _dialVisible;
 
   changeVideo(String type, String videoString) {
     _controller.pause();
@@ -64,10 +62,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       _video = video;
       changeVideo('file', _video.path);
     });
-  }
-
-  void _select(String choice) {
-    choice == 'gallery' ? _pickVideoFromGallery() : _pickVideoFromCamera();
   }
 
   @override
@@ -124,46 +118,45 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         },
       ),
       floatingActionButton: SpeedDial(
-          // child: Icon(Icons.add, color: Colors.black),
-          // both default to 16
-          marginRight: 18,
-          marginBottom: 20,
-          animatedIcon: AnimatedIcons.menu_close,
-          animatedIconTheme: IconThemeData(size: 22.0),
-          // this is ignored if animatedIcon is non null
-          child: Icon(Icons.add),
-          visible: true,
-          // If true user is forced to close dial manually 
-          // by tapping main button and overlay is not rendered.
-          closeManually: false,
-          curve: Curves.bounceIn,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          onOpen: () => print('OPENING DIAL'),
-          onClose: () => print('DIAL CLOSED'),
-          tooltip: 'Speed Dial',
-          heroTag: 'speed-dial-hero-tag',
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 8.0,
-          shape: CircleBorder(),
-          children: [
-            SpeedDialChild(
+        // child: Icon(Icons.add, color: Colors.black),
+        // both default to 16
+        marginRight: 18,
+        marginBottom: 20,
+        animatedIcon: AnimatedIcons.menu_close,
+        animatedIconTheme: IconThemeData(size: 22.0),
+        // this is ignored if animatedIcon is non null
+        child: Icon(Icons.add),
+        visible: true,
+        // If true user is forced to close dial manually
+        // by tapping main button and overlay is not rendered.
+        closeManually: false,
+        curve: Curves.bounceIn,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.5,
+        onOpen: () => print('OPENING DIAL'),
+        onClose: () => print('DIAL CLOSED'),
+        tooltip: 'Speed Dial',
+        heroTag: 'speed-dial-hero-tag',
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 8.0,
+        shape: CircleBorder(),
+        children: [
+          SpeedDialChild(
               child: Icon(Icons.video_library),
               backgroundColor: Colors.red,
               label: 'gallery',
               labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => _pickVideoFromGallery()
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.videocam),
-              backgroundColor: Colors.blue,
-              label: 'camera',
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => _pickVideoFromCamera(),
-            ),
-          ],
-        ),
+              onTap: () => _pickVideoFromGallery()),
+          SpeedDialChild(
+            child: Icon(Icons.videocam),
+            backgroundColor: Colors.blue,
+            label: 'camera',
+            labelStyle: TextStyle(fontSize: 18.0),
+            onTap: () => _pickVideoFromCamera(),
+          ),
+        ],
+      ),
     );
   }
 }
