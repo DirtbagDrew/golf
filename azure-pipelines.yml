@@ -14,13 +14,12 @@ steps:
   inputs:
     script: |
       npm install -g flutter-cli
-  displayName: 'install fastlane'
+  displayName: 'install flutter'
 - task: CmdLine@2
   inputs:
     script: |
-      fastlane init
-    workingDirectory: '$(System.DefaultWorkingDirectory)/android'
-  displayName: 'initalize android project'
+      flutter test
+  displayName: 'flutter test'
 - task: CmdLine@2
   inputs:
     script: flutter build apk --release;
