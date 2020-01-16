@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/dirtbagdrew/Golf Project/_apis/build/status/DirtbagDrew.golf?branchName=master)](https://dev.azure.com/dirtbagdrew/Golf Project/_build/latest?definitionId=1&branchName=master)
+
 # golf
 
 A new Flutter project.
