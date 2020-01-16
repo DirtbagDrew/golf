@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/dirtbagdrew/Golf Project/_apis/build/status/DirtbagDrew.golf?branchName=master)](https://dev.azure.com/dirtbagdrew/Golf Project/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/dirtbagdrew/Golf%20Project/_apis/build/status/DirtbagDrew.golf?branchName=master)](https://dev.azure.com/dirtbagdrew/Golf Project/_build/latest?definitionId=1&branchName=master)
 
 # golf
 
