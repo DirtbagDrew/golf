@@ -14,7 +14,6 @@ steps:
   inputs:
     script: |
       dir
-    workingDirectory: './golf'
 - task: install-flutter-sdk@0
   inputs:
     channel: 'stable'
