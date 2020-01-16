@@ -17,6 +17,8 @@ steps:
   inputs:
     script: |
       flutter test
+    workingDirectory: './golf'
+
   displayName: 'flutter test'
 - task: CmdLine@2
   inputs:
