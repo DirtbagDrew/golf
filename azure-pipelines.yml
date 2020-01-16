@@ -10,17 +10,11 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-- task: CmdLine@2
-  inputs:
-    script: |
-      dir
 - task: install-flutter-sdk@0
   inputs:
     channel: 'stable'
 - task: CmdLine@2
   inputs:
     script: |
-      flutter test
-    workingDirectory: './golf'
-
-  displayName: 'flutter test'
+      flutter build apk
+  displayName: 'flutter build android'
