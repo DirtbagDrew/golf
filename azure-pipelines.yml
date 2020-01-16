@@ -13,7 +13,10 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      brew install fastlane
+      sudo apt install ruby ruby-dev
+      export LC_ALL=en_US.UTF-8
+      export LANG=en_US.UTF-8
+      sudo gem install fastlane
   displayName: 'install fastlane'
 - task: CmdLine@2
   inputs:
