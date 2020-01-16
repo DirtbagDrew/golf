@@ -1,4 +1,4 @@
-# golf_project
+# golf
 
 A new Flutter project.
 

@@ -36,7 +36,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
-    // _controller.
 
     // Use the controller to loop the video.
     _controller.setLooping(true);
@@ -46,19 +45,23 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 // This funcion will helps you to pick a Video File
   _pickVideoFromGallery() async {
     File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
-    setState(() {
-      _video = video;
-      changeVideo('file', _video.path);
-    });
+    if (video != null) {
+      setState(() {
+        _video = video;
+        changeVideo('file', _video.path);
+      });
+    }
   }
 
 // This funcion will helps you to pick and Image from Camera
   _pickVideoFromCamera() async {
     File video = await ImagePicker.pickVideo(source: ImageSource.camera);
-    setState(() {
-      _video = video;
-      changeVideo('file', _video.path);
-    });
+    if (video != null) {
+      setState(() {
+        _video = video;
+        changeVideo('file', _video.path);
+      });
+    }
   }
 
   @override
