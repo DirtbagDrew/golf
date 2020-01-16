@@ -13,7 +13,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      npm install -g flutter-cli
+      sudo npm install -g flutter-cli
   displayName: 'install flutter'
 - task: CmdLine@2
   inputs:
