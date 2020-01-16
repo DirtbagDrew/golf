@@ -1,58 +1,3 @@
-<<<<<<< HEAD
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-trigger:
-- master
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-- task: CmdLine@2
-  inputs:
-    script: |
-      sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-      test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-      test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-      test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
-      echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
-      sudo apt-get install build-essential curl file git
-  displayName: 'Install homebrew'
-- task: CmdLine@2
-  inputs:
-    script: |
-      brew cask install fastlane
-  displayName: 'install fastlane'
-- task: CmdLine@2
-  inputs:
-    script: |
-      fastlane init
-    workingDirectory: '$(System.DefaultWorkingDirectory)/android'
-  displayName: 'initalize android project'
-- task: CmdLine@2
-  inputs:
-    script: flutter build apk --release;
-  displayName: 'build android project'
-- task: CmdLine@2
-  inputs:
-    script: flutter build ios --release --no-codesign.
-  displayName: 'Build ios project'
-- task: CmdLine@2
-  inputs:
-    script: |
-      fastlane init
-    workingDirectory: '$(System.DefaultWorkingDirectory)/android'
-  displayName: 'initalize android project'
-- task: CmdLine@2
-  inputs:
-    script: |
-      fastlane init
-    workingDirectory: '$(System.DefaultWorkingDirectory)/ios'
-  displayName: 'initalize ios project'
-=======
 # Starter pipeline
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
@@ -73,4 +18,3 @@ steps:
     script: |
       flutter build apk
   displayName: 'flutter build android'
->>>>>>> 5898c5f35b03b00e27c7762dc147402099f20cdf
