@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Starter pipeline
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
@@ -51,3 +52,25 @@ steps:
       fastlane init
     workingDirectory: '$(System.DefaultWorkingDirectory)/ios'
   displayName: 'initalize ios project'
+=======
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: install-flutter-sdk@0
+  inputs:
+    channel: 'stable'
+- task: CmdLine@2
+  inputs:
+    script: |
+      flutter build apk
+  displayName: 'flutter build android'
+>>>>>>> 5898c5f35b03b00e27c7762dc147402099f20cdf
