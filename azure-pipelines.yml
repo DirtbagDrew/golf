@@ -10,17 +10,16 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: FlutterInstall@0
+- task: install-flutter-sdk@0
   inputs:
     channel: 'stable'
-    version: 'latest'
 - task: CmdLine@2
   inputs:
     script: |
       flutter test
   displayName: 'flutter test'
-- task: FlutterBuild@0
+- task: CmdLine@2
   inputs:
-    target: 'all'
-    projectDirectory: '.'
-    buildFlavour: 'development'
+    script: |
+      flutter build
+  displayName: 'flutter build'
