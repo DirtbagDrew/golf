@@ -10,6 +10,11 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+- task: CmdLine@2
+  inputs:
+    script: |
+      dir
+    workingDirectory: './golf'
 - task: install-flutter-sdk@0
   inputs:
     channel: 'stable'
