@@ -58,6 +58,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
+  _scrobblerPosition() {
+    return (double.parse(_currentPosition) / double.parse(_totalTime) * 2) - 1;
+  }
+
   @override
   void initState() {
     // Create and store the VideoPlayerController. The VideoPlayerController
@@ -112,16 +116,20 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   ),
                   Text('$_currentPosition/$_totalTime'),
                   Align(
-                    alignment: Alignment(
-                        double.parse(_currentPosition) /
-                            double.parse(_totalTime),
-                        -1.0),
-                    child: Icon(
-                      Icons.golf_course,
-                      color: Colors.red,
-                      size: 30.0,
-                    ),
-                  )
+                      alignment: Alignment(_scrobblerPosition(), -1.0),
+                      child: Draggable(
+                        child: Icon(
+                          Icons.golf_course,
+                          color: Colors.red,
+                          size: 30.0,
+                        ),
+                        feedback: Icon(
+                          Icons.golf_course,
+                          color: Colors.red,
+                          size: 30.0,
+                        ),
+                        axis: Axis.horizontal,
+                      )),
                 ],
               );
             } else {
