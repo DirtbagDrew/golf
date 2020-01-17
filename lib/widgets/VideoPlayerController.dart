@@ -22,6 +22,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   File _video;
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
+  String _currentPosition = "";
+  String _totalTime = "";
 
   changeVideo(String type, String videoString) {
     _controller.pause();
@@ -36,6 +38,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
+    // _controller.
 
     // Use the controller to loop the video.
     _controller.setLooping(true);
@@ -43,19 +46,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
 // This funcion will helps you to pick a Video File
-  _pickVideoFromGallery() async {
-    File video = await ImagePicker.pickVideo(source: ImageSource.gallery);
-    if (video != null) {
-      setState(() {
-        _video = video;
-        changeVideo('file', _video.path);
-      });
-    }
-  }
-
-// This funcion will helps you to pick and Image from Camera
-  _pickVideoFromCamera() async {
-    File video = await ImagePicker.pickVideo(source: ImageSource.camera);
+  _pickVideo(String source) async {
+    File video = source == 'gallery'
+        ? await ImagePicker.pickVideo(source: ImageSource.gallery)
+        : await ImagePicker.pickVideo(source: ImageSource.camera);
     if (video != null) {
       setState(() {
         _video = video;
@@ -71,7 +65,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // or the internet.
     _controller = VideoPlayerController.asset(
       'assets/tiger.mp4',
-    );
+    )..addListener(() {
+        setState(() {
+          _currentPosition =
+              _controller.value.position?.inSeconds.toString() ?? "";
+          _totalTime = _controller.value.duration?.inSeconds.toString() ?? "";
+        });
+      });
 
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -94,66 +94,78 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Video Player Demo',
-        home: Scaffold(
-          // Use a FutureBuilder to display a loading spinner while waiting for the
-          // VideoPlayerController to finish initializing.
-          body: FutureBuilder(
-            future: _initializeVideoPlayerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                // If the VideoPlayerController has finished initialization, use
-                // the data it provides to limit the aspect ratio of the video.
-                return AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  // Use the VideoPlayer widget to display the video.
-                  child: VideoPlayer(_controller),
-                );
-              } else {
-                // If the VideoPlayerController is still initializing, show a
-                // loading spinner.
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-          floatingActionButton: SpeedDial(
-            // child: Icon(Icons.add, color: Colors.black),
-            // both default to 16
-            marginRight: 18,
-            marginBottom: 20,
-            animatedIcon: AnimatedIcons.menu_close,
-            animatedIconTheme: IconThemeData(size: 22.0),
-            // this is ignored if animatedIcon is non null
-            child: Icon(Icons.add),
-            visible: true,
-            // If true user is forced to close dial manually
-            // by tapping main button and overlay is not rendered.
-            closeManually: false,
-            curve: Curves.bounceIn,
-            overlayColor: Colors.black,
-            overlayOpacity: 0.5,
-            tooltip: 'Speed Dial',
-            heroTag: 'speed-dial-hero-tag',
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            elevation: 8.0,
-            shape: CircleBorder(),
-            children: [
-              SpeedDialChild(
-                  child: Icon(Icons.video_library),
-                  backgroundColor: Colors.red,
-                  label: 'gallery',
-                  labelStyle: TextStyle(fontSize: 18.0),
-                  onTap: () => _pickVideoFromGallery()),
-              SpeedDialChild(
-                child: Icon(Icons.videocam),
-                backgroundColor: Colors.blue,
-                label: 'camera',
+      home: Scaffold(
+        // Use a FutureBuilder to display a loading spinner while waiting for the
+        // VideoPlayerController to finish initializing.
+        body: FutureBuilder(
+          future: _initializeVideoPlayerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              // If the VideoPlayerController has finished initialization, use
+              // the data it provides to limit the aspect ratio of the video.
+              return Column(
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    // Use the VideoPlayer widget to display the video.
+                    child: VideoPlayer(_controller),
+                  ),
+                  Text('$_currentPosition/$_totalTime'),
+                  Align(
+                    alignment: Alignment(
+                        double.parse(_currentPosition) /
+                            double.parse(_totalTime),
+                        -1.0),
+                    child: Icon(
+                      Icons.golf_course,
+                      color: Colors.red,
+                      size: 30.0,
+                    ),
+                  )
+                ],
+              );
+            } else {
+              // If the VideoPlayerController is still initializing, show a
+              // loading spinner.
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          animatedIconTheme: IconThemeData(size: 22.0),
+          backgroundColor: Colors.white,
+          child: Icon(Icons.add),
+          children: [
+            SpeedDialChild(
+                child: Icon(Icons.video_library),
+                backgroundColor: Colors.red,
+                label: 'gallery',
                 labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () => _pickVideoFromCamera(),
-              ),
-            ],
-          ),
-        ));
+                onTap: () => _pickVideo('gallery')),
+            SpeedDialChild(
+              child: Icon(Icons.videocam),
+              backgroundColor: Colors.blue,
+              label: 'camera',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => _pickVideo('camera'),
+            ),
+          ],
+          closeManually: false,
+          curve: Curves.bounceIn,
+          elevation: 8.0,
+          foregroundColor: Colors.black,
+          heroTag: 'speed-dial-hero-tag',
+          marginBottom: 20,
+          marginRight: 18,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          shape: CircleBorder(),
+          tooltip: 'Speed Dial',
+          visible: true,
+        ),
+      ),
+      title: 'Video Player Demo',
+    );
   }
 }
