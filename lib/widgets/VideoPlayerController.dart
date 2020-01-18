@@ -29,11 +29,35 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     _controller.pause();
 
     if (type == 'file') {
-      _controller = VideoPlayerController.file(new File(videoString));
+      _controller = VideoPlayerController.file(new File(videoString))
+        ..addListener(() {
+          setState(() {
+            _currentPosition =
+                _controller.value.position?.inSeconds.toString() ?? "";
+            _totalTime = _controller.value.duration?.inSeconds.toString() ?? "";
+          });
+        });
+      ;
     } else if (type == 'asset') {
-      _controller = VideoPlayerController.asset(videoString);
+      _controller = VideoPlayerController.asset(videoString)
+        ..addListener(() {
+          setState(() {
+            _currentPosition =
+                _controller.value.position?.inSeconds.toString() ?? "";
+            _totalTime = _controller.value.duration?.inSeconds.toString() ?? "";
+          });
+        });
+      ;
     } else {
-      _controller = VideoPlayerController.network(videoString);
+      _controller = VideoPlayerController.network(videoString)
+        ..addListener(() {
+          setState(() {
+            _currentPosition =
+                _controller.value.position?.inSeconds.toString() ?? "";
+            _totalTime = _controller.value.duration?.inSeconds.toString() ?? "";
+          });
+        });
+      ;
     }
 
     // Initialize the controller and store the Future for later use.
@@ -59,7 +83,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   _scrobblerPosition() {
-    return (double.parse(_currentPosition) / double.parse(_totalTime) * 2) - 1;
+    return (double.parse(_currentPosition != null ? _currentPosition : 0.0) /
+            double.parse(_totalTime != null ? _totalTime : 0.0) *
+            2) -
+        1;
   }
 
   @override
