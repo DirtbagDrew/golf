@@ -95,6 +95,21 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     super.dispose();
   }
 
+  newTime(Offset o) {
+    var deviceWidth = MediaQuery.of(context).size.width;
+    var position = o.dx;
+    var relativePostition = position / deviceWidth;
+    var duration = _controller.value.duration.inSeconds.toDouble();
+    var timeInDouble = duration * relativePostition;
+    return timeInDouble.round();
+  }
+
+  handleDragCanceled(Offset o) {
+    setState(() {
+      _controller.seekTo(new Duration(seconds: newTime(o)));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -118,9 +133,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   Align(
                       alignment: Alignment(_scrobblerPosition(), -1.0),
                       child: Draggable(
+                        onDraggableCanceled: (v, o) {
+                          handleDragCanceled(o);
+                        },
                         child: Icon(
                           Icons.golf_course,
-                          color: Colors.red,
+                          color: Colors.green,
                           size: 30.0,
                         ),
                         feedback: Icon(
