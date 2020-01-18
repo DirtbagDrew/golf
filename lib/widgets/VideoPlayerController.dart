@@ -33,8 +33,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         ..addListener(() {
           setState(() {
             _currentPosition =
-                _controller.value.position?.inSeconds.toString() ?? "";
-            _totalTime = _controller.value.duration?.inSeconds.toString() ?? "";
+                _controller.value.position?.inMicroseconds.toString() ?? "";
+            _totalTime =
+                _controller.value.duration?.inMicroseconds.toString() ?? "";
           });
         });
       ;
@@ -43,8 +44,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         ..addListener(() {
           setState(() {
             _currentPosition =
-                _controller.value.position?.inSeconds.toString() ?? "";
-            _totalTime = _controller.value.duration?.inSeconds.toString() ?? "";
+                _controller.value.position?.inMicroseconds.toString() ?? "";
+            _totalTime =
+                _controller.value.duration?.inMicroseconds.toString() ?? "";
           });
         });
       ;
@@ -53,8 +55,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         ..addListener(() {
           setState(() {
             _currentPosition =
-                _controller.value.position?.inSeconds.toString() ?? "";
-            _totalTime = _controller.value.duration?.inSeconds.toString() ?? "";
+                _controller.value.position?.inMicroseconds.toString() ?? "";
+            _totalTime =
+                _controller.value.duration?.inMicroseconds.toString() ?? "";
           });
         });
       ;
@@ -99,8 +102,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     )..addListener(() {
         setState(() {
           _currentPosition =
-              _controller.value.position?.inSeconds.toString() ?? "";
-          _totalTime = _controller.value.duration?.inSeconds.toString() ?? "";
+              _controller.value.position?.inMicroseconds.toString() ?? "";
+          _totalTime =
+              _controller.value.duration?.inMicroseconds.toString() ?? "";
         });
       });
 
@@ -126,14 +130,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     var deviceWidth = MediaQuery.of(context).size.width;
     var position = o.dx;
     var relativePostition = position / deviceWidth;
-    var duration = _controller.value.duration.inSeconds.toDouble();
+    var duration = _controller.value.duration.inMicroseconds.toDouble();
     var timeInDouble = duration * relativePostition;
     return timeInDouble.round();
   }
 
   handleDragCanceled(Offset o) {
     setState(() {
-      _controller.seekTo(new Duration(seconds: newTime(o)));
+      _controller.seekTo(new Duration(microseconds: newTime(o)));
     });
   }
 
