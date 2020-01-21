@@ -38,7 +38,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 _controller.value.duration?.inMicroseconds.toString() ?? "";
           });
         });
-      ;
     } else if (type == 'asset') {
       _controller = VideoPlayerController.asset(videoString)
         ..addListener(() {
@@ -49,7 +48,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 _controller.value.duration?.inMicroseconds.toString() ?? "";
           });
         });
-      ;
     } else {
       _controller = VideoPlayerController.network(videoString)
         ..addListener(() {
@@ -60,7 +58,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 _controller.value.duration?.inMicroseconds.toString() ?? "";
           });
         });
-      ;
     }
 
     // Initialize the controller and store the Future for later use.
@@ -70,6 +67,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // Use the controller to loop the video.
     _controller.setLooping(true);
     _controller.play();
+  }
+
+  double deviceWidth() {
+    return MediaQuery.of(context).size.width;
+  }
+
+  double deviceHeight() {
+    return MediaQuery.of(context).size.height;
   }
 
 // This funcion will helps you to pick a Video File
@@ -147,47 +152,63 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       home: Scaffold(
         // Use a FutureBuilder to display a loading spinner while waiting for the
         // VideoPlayerController to finish initializing.
-        body: FutureBuilder(
-          future: _initializeVideoPlayerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              // If the VideoPlayerController has finished initialization, use
-              // the data it provides to limit the aspect ratio of the video.
-              return Column(
-                children: <Widget>[
-                  AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    // Use the VideoPlayer widget to display the video.
-                    child: VideoPlayer(_controller),
-                  ),
-                  Text('$_currentPosition/$_totalTime'),
-                  Align(
-                      alignment: Alignment(_scrobblerPosition(), -1.0),
-                      child: Draggable(
-                        onDraggableCanceled: (v, o) {
-                          handleDragCanceled(o);
-                        },
-                        child: Icon(
-                          Icons.golf_course,
-                          color: Colors.green,
-                          size: 30.0,
-                        ),
-                        feedback: Icon(
-                          Icons.golf_course,
-                          color: Colors.red,
-                          size: 30.0,
-                        ),
-                        axis: Axis.horizontal,
-                      )),
-                ],
-              );
-            } else {
-              // If the VideoPlayerController is still initializing, show a
-              // loading spinner.
-              return Center(child: CircularProgressIndicator());
-            }
-          },
+        body: Container(
+          constraints: BoxConstraints(
+              maxHeight: deviceHeight(), maxWidth: deviceWidth()),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: FutureBuilder(
+                  future: _initializeVideoPlayerFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // If the VideoPlayerController has finished initialization, use
+                      // the data it provides to limit the aspect ratio of the video.
+                      return Column(
+                        children: <Widget>[
+                          Stack(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            children: <Widget>[
+                              AspectRatio(
+                                aspectRatio: _controller.value.aspectRatio,
+                                // Use the VideoPlayer widget to display the video.
+                                child: VideoPlayer(_controller),
+                              ),
+                              Align(
+                                  alignment:
+                                      Alignment(_scrobblerPosition(), -1.0),
+                                  child: Draggable(
+                                    onDraggableCanceled: (v, o) {
+                                      handleDragCanceled(o);
+                                    },
+                                    child: Icon(
+                                      Icons.golf_course,
+                                      color: Colors.green,
+                                      size: 30.0,
+                                    ),
+                                    feedback: Icon(
+                                      Icons.golf_course,
+                                      color: Colors.red,
+                                      size: 30.0,
+                                    ),
+                                    axis: Axis.horizontal,
+                                  )),
+                            ],
+                          ),
+                        ],
+                      );
+                    } else {
+                      // If the VideoPlayerController is still initializing, show a
+                      // loading spinner.
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ), //here,)
+              )
+            ],
+          ),
         ),
+
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
           animatedIconTheme: IconThemeData(size: 22.0),
