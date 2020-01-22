@@ -24,6 +24,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Future<void> _initializeVideoPlayerFuture;
   String _currentPosition = "";
   String _totalTime = "";
+  bool _visible = true;
 
   changeVideo(String type, String videoString) {
     _controller.pause();
@@ -169,30 +170,58 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           Stack(
                             alignment: AlignmentDirectional.bottomCenter,
                             children: <Widget>[
-                              AspectRatio(
-                                aspectRatio: _controller.value.aspectRatio,
-                                // Use the VideoPlayer widget to display the video.
-                                child: VideoPlayer(_controller),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _visible = !_visible;
+                                  });
+                                },
+                                child: AspectRatio(
+                                  aspectRatio: _controller.value.aspectRatio,
+                                  // Use the VideoPlayer widget to display the video.
+                                  child: VideoPlayer(_controller),
+                                ),
                               ),
-                              Align(
-                                  alignment:
-                                      Alignment(_scrobblerPosition(), -1.0),
-                                  child: Draggable(
-                                    onDraggableCanceled: (v, o) {
-                                      handleDragCanceled(o);
-                                    },
-                                    child: Icon(
-                                      Icons.golf_course,
-                                      color: Colors.green,
-                                      size: 30.0,
-                                    ),
-                                    feedback: Icon(
-                                      Icons.golf_course,
-                                      color: Colors.red,
-                                      size: 30.0,
-                                    ),
-                                    axis: Axis.horizontal,
-                                  )),
+                              AnimatedOpacity(
+                                opacity: _visible ? 1.0 : 0.0,
+                                duration: Duration(milliseconds: 300),
+                                child: Container(
+                                  color: Colors.black.withOpacity(.4),
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        height: 30,
+                                        child: Align(
+                                          alignment: Alignment(
+                                              _scrobblerPosition(), 0.0),
+                                          child: Draggable(
+                                            onDraggableCanceled: (v, o) {
+                                              handleDragCanceled(o);
+                                            },
+                                            child: Icon(
+                                              Icons.blur_circular,
+                                              color: Colors.white,
+                                            ),
+                                            feedback: Icon(
+                                              Icons.blur_circular,
+                                              color: Colors.white,
+                                            ),
+                                            axis: Axis.horizontal,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment(1, -1.0),
+                                        child: Icon(
+                                          Icons.golf_course,
+                                          color: Colors.red,
+                                          size: 30.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -203,7 +232,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                       return Center(child: CircularProgressIndicator());
                     }
                   },
-                ), //here,)
+                ),
               )
             ],
           ),
