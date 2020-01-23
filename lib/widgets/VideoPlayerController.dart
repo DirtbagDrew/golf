@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
@@ -22,43 +23,20 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   File _video;
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
+  bool _visible = true;
   String _currentPosition = "";
   String _totalTime = "";
-  bool _visible = true;
+  Timer _everySecond;
 
   changeVideo(String type, String videoString) {
     _controller.pause();
 
     if (type == 'file') {
-      _controller = VideoPlayerController.file(new File(videoString))
-        ..addListener(() {
-          setState(() {
-            _currentPosition =
-                _controller.value.position?.inMicroseconds.toString() ?? "";
-            _totalTime =
-                _controller.value.duration?.inMicroseconds.toString() ?? "";
-          });
-        });
+      _controller = VideoPlayerController.file(new File(videoString));
     } else if (type == 'asset') {
-      _controller = VideoPlayerController.asset(videoString)
-        ..addListener(() {
-          setState(() {
-            _currentPosition =
-                _controller.value.position?.inMicroseconds.toString() ?? "";
-            _totalTime =
-                _controller.value.duration?.inMicroseconds.toString() ?? "";
-          });
-        });
+      _controller = VideoPlayerController.asset(videoString);
     } else {
-      _controller = VideoPlayerController.network(videoString)
-        ..addListener(() {
-          setState(() {
-            _currentPosition =
-                _controller.value.position?.inMicroseconds.toString() ?? "";
-            _totalTime =
-                _controller.value.duration?.inMicroseconds.toString() ?? "";
-          });
-        });
+      _controller = VideoPlayerController.network(videoString);
     }
 
     // Initialize the controller and store the Future for later use.
@@ -91,13 +69,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
   }
 
-  _scrobblerPosition() {
-    return (double.parse(_currentPosition != null ? _currentPosition : 0.0) /
-            double.parse(_totalTime != null ? _totalTime : 0.0) *
-            2) -
-        1;
-  }
-
   @override
   void initState() {
     // Create and store the VideoPlayerController. The VideoPlayerController
@@ -105,14 +76,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // or the internet.
     _controller = VideoPlayerController.asset(
       'assets/tiger.mp4',
-    )..addListener(() {
-        setState(() {
-          _currentPosition =
-              _controller.value.position?.inMicroseconds.toString() ?? "";
-          _totalTime =
-              _controller.value.duration?.inMicroseconds.toString() ?? "";
-        });
+    );
+
+    // defines a timer
+    new Timer.periodic(Duration(milliseconds: 1), (Timer t) {
+      setState(() {
+        _currentPosition =
+            _controller.value.position?.inMilliseconds.toString() ?? "";
+        _totalTime =
+            _controller.value.duration?.inMilliseconds.toString() ?? "";
       });
+    });
 
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -132,18 +106,30 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     super.dispose();
   }
 
+  getDuration() {
+    Duration duration = _controller.value.duration;
+    return duration.inMilliseconds.toDouble();
+  }
+
+  getPosition() {
+    Duration position = _controller.value.position;
+    double positionMilliseconds = position.inMilliseconds.toDouble();
+    var duration = getDuration();
+    return positionMilliseconds > duration ? duration : positionMilliseconds;
+  }
+
   newTime(Offset o) {
     var deviceWidth = MediaQuery.of(context).size.width;
     var position = o.dx;
     var relativePostition = position / deviceWidth;
-    var duration = _controller.value.duration.inMicroseconds.toDouble();
+    var duration = getDuration();
     var timeInDouble = duration * relativePostition;
     return timeInDouble.round();
   }
 
-  handleDragCanceled(Offset o) {
+  updatePosition(double position) {
     setState(() {
-      _controller.seekTo(new Duration(microseconds: newTime(o)));
+      _controller.seekTo(new Duration(milliseconds: position.toInt()));
     });
   }
 
@@ -167,62 +153,45 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                       // the data it provides to limit the aspect ratio of the video.
                       return Column(
                         children: <Widget>[
-                          Stack(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _visible = !_visible;
-                                  });
-                                },
-                                child: AspectRatio(
-                                  aspectRatio: _controller.value.aspectRatio,
-                                  // Use the VideoPlayer widget to display the video.
-                                  child: VideoPlayer(_controller),
-                                ),
-                              ),
-                              AnimatedOpacity(
-                                opacity: _visible ? 1.0 : 0.0,
-                                duration: Duration(milliseconds: 300),
-                                child: Container(
-                                  color: Colors.black.withOpacity(.4),
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Container(
-                                        height: 30,
-                                        child: Align(
-                                          alignment: Alignment(
-                                              _scrobblerPosition(), 0.0),
-                                          child: Draggable(
-                                            onDraggableCanceled: (v, o) {
-                                              handleDragCanceled(o);
-                                            },
-                                            child: Icon(
-                                              Icons.blur_circular,
-                                              color: Colors.white,
-                                            ),
-                                            feedback: Icon(
-                                              Icons.blur_circular,
-                                              color: Colors.white,
-                                            ),
-                                            axis: Axis.horizontal,
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment(1, -1.0),
-                                        child: Icon(
-                                          Icons.golf_course,
-                                          color: Colors.red,
-                                          size: 30.0,
-                                        ),
-                                      ),
-                                    ],
+                          Expanded(
+                            child: Container(
+                              alignment: AlignmentDirectional.topCenter,
+                              child: Stack(
+                                alignment: AlignmentDirectional.bottomCenter,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _visible = !_visible;
+                                      });
+                                    },
+                                    child: AspectRatio(
+                                      aspectRatio:
+                                          _controller.value.aspectRatio,
+                                      // Use the VideoPlayer widget to display the video.
+                                      child: VideoPlayer(_controller),
+                                    ),
                                   ),
-                                ),
+                                  Container(
+                                    height: 30,
+                                    child: AnimatedOpacity(
+                                      opacity: _visible ? 1.0 : 0.0,
+                                      duration: Duration(milliseconds: 300),
+                                      child: Container(
+                                          color: Colors.black.withOpacity(.4),
+                                          child: Slider(
+                                              min: 0,
+                                              max: getDuration(),
+                                              value: getPosition(),
+                                              onChanged: (position) {
+                                                setState(() =>
+                                                    updatePosition(position));
+                                              })),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       );
