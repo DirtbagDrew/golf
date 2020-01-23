@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'VideoSlider.dart';
 
 class VideoPlayerApp extends StatelessWidget {
   @override
@@ -172,23 +173,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                                       child: VideoPlayer(_controller),
                                     ),
                                   ),
-                                  Container(
-                                    height: 30,
-                                    child: AnimatedOpacity(
-                                      opacity: _visible ? 1.0 : 0.0,
-                                      duration: Duration(milliseconds: 300),
-                                      child: Container(
-                                          color: Colors.black.withOpacity(.4),
-                                          child: Slider(
-                                              min: 0,
-                                              max: getDuration(),
-                                              value: getPosition(),
-                                              onChanged: (position) {
-                                                setState(() =>
-                                                    updatePosition(position));
-                                              })),
-                                    ),
-                                  ),
+                                  VideoSlider(
+                                    onChanged: updatePosition,
+                                    position: getPosition(),
+                                    duration: getDuration(),
+                                    visible: _visible,
+                                  )
                                 ],
                               ),
                             ),
