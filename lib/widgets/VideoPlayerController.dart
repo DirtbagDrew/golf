@@ -25,12 +25,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
   bool _visible = true;
-  String _currentPosition = "";
-  String _totalTime = "";
-  Timer _everySecond;
 
-  changeVideo(String type, String videoString) {
-    _controller.pause();
+  setVideo(String type, String videoString) {
+    if (_controller != null) {
+      _controller.pause();
+    }
 
     if (type == 'file') {
       _controller = VideoPlayerController.file(new File(videoString));
@@ -39,6 +38,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     } else {
       _controller = VideoPlayerController.network(videoString);
     }
+
+    _controller
+      ..addListener(() {
+        setState(() {
+          // _currentPosition =
+          //     _controller.value.position?.inMilliseconds.toString() ?? "";
+          // _totalTime =
+          //     _controller.value.duration?.inMilliseconds.toString() ?? "";
+        });
+      });
 
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -65,7 +74,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     if (video != null) {
       setState(() {
         _video = video;
-        changeVideo('file', _video.path);
+        setVideo('file', _video.path);
       });
     }
   }
@@ -75,19 +84,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // Create and store the VideoPlayerController. The VideoPlayerController
     // offers several different constructors to play videos from assets, files,
     // or the internet.
-    _controller = VideoPlayerController.asset(
-      'assets/tiger.mp4',
-    );
-
-    // defines a timer
-    new Timer.periodic(Duration(milliseconds: 1), (Timer t) {
-      setState(() {
-        _currentPosition =
-            _controller.value.position?.inMilliseconds.toString() ?? "";
-        _totalTime =
-            _controller.value.duration?.inMilliseconds.toString() ?? "";
-      });
-    });
+    setVideo('asset', 'assets/tiger.mp4');
 
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
