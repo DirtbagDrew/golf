@@ -41,12 +41,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
     _controller
       ..addListener(() {
-        setState(() {
-          // _currentPosition =
-          //     _controller.value.position?.inMilliseconds.toString() ?? "";
-          // _totalTime =
-          //     _controller.value.duration?.inMilliseconds.toString() ?? "";
-        });
+        setState(() {});
       });
 
     // Initialize the controller and store the Future for later use.
@@ -85,14 +80,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // offers several different constructors to play videos from assets, files,
     // or the internet.
     setVideo('asset', 'assets/tiger.mp4');
-
-    // Initialize the controller and store the Future for later use.
-    _initializeVideoPlayerFuture = _controller.initialize();
-
-    // Use the controller to loop the video.
-    _controller.setLooping(true);
-    _controller.play();
-
     super.initState();
   }
 
