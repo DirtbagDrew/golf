@@ -5,23 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'VideoSlider.dart';
-
-class VideoPlayerApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return VideoPlayerScreen();
-  }
-}
+import 'VideoSelector.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
-  VideoPlayerScreen({Key key}) : super(key: key);
+  VideoPlayerScreen( {
+    Key key,
+      this.duration: 0,
+      this.position: 0,
+      this.visible: false,
+      @required this.onChanged})
+      : super(key: key);
 
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  File _video;
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
   bool _visible = true;
@@ -59,19 +58,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   double deviceHeight() {
     return MediaQuery.of(context).size.height;
-  }
-
-// This funcion will helps you to pick a Video File
-  _pickVideo(String source) async {
-    File video = source == 'gallery'
-        ? await ImagePicker.pickVideo(source: ImageSource.gallery)
-        : await ImagePicker.pickVideo(source: ImageSource.camera);
-    if (video != null) {
-      setState(() {
-        _video = video;
-        setVideo('file', _video.path);
-      });
-    }
   }
 
   @override
@@ -118,19 +104,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     });
   }
 
+  _pickVideo(String videoPath){
+    setVideo('file', videoPath);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        // Use a FutureBuilder to display a loading spinner while waiting for the
-        // VideoPlayerController to finish initializing.
-        body: Container(
-          constraints: BoxConstraints(
-              maxHeight: deviceHeight(), maxWidth: deviceWidth()),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: FutureBuilder(
+      home: FutureBuilder(
                   future: _initializeVideoPlayerFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
@@ -175,47 +156,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                       return Center(child: CircularProgressIndicator());
                     }
                   },
-                ),
-              )
-            ],
-          ),
-        ),
-
-        floatingActionButton: SpeedDial(
-          animatedIcon: AnimatedIcons.menu_close,
-          animatedIconTheme: IconThemeData(size: 22.0),
-          backgroundColor: Colors.white,
-          child: Icon(Icons.add),
-          children: [
-            SpeedDialChild(
-                child: Icon(Icons.video_library),
-                backgroundColor: Colors.red,
-                label: 'gallery',
-                labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () => _pickVideo('gallery')),
-            SpeedDialChild(
-              child: Icon(Icons.videocam),
-              backgroundColor: Colors.blue,
-              label: 'camera',
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => _pickVideo('camera'),
-            ),
-          ],
-          closeManually: false,
-          curve: Curves.bounceIn,
-          elevation: 8.0,
-          foregroundColor: Colors.black,
-          heroTag: 'speed-dial-hero-tag',
-          marginBottom: 20,
-          marginRight: 18,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          shape: CircleBorder(),
-          tooltip: 'Speed Dial',
-          visible: true,
-        ),
-      ),
-      title: 'Video Player Demo',
-    );
+                );
   }
 }

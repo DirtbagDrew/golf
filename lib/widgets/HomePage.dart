@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'VideoPlayerController.dart';
+import 'VideoPage.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VideoPlayerApp()),
+              MaterialPageRoute(builder: (context) => VideoPage()),
             );
           },
         ),
