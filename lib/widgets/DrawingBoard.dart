@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:golf_project/widgets/DrawingBoardPainter.dart';
 
 class DrawingBoard extends StatefulWidget {
-  DrawingBoard({Key key, @required this.canvas}) : super(key: key);
-  Widget canvas;
+  DrawingBoard({Key key, @required this.child}) : super(key: key);
+  Widget child;
   _DrawingBoardState createState() => _DrawingBoardState();
 }
 
@@ -36,7 +36,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
         },
         child: Stack(
           children: <Widget>[
-            widget.canvas,
+            widget.child,
             CustomPaint(
               painter: DrawingBoardPainter(_offsets),
               child: Container(),

@@ -116,7 +116,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           aspectRatio: _controller.value.aspectRatio,
                           // Use the VideoPlayer widget to display the video.
                           child: DrawingBoard(
-                            canvas: VideoPlayer(_controller),
+                            child: VideoPlayer(_controller),
                           ),
                         ),
                       ),

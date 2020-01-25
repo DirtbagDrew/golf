@@ -13,7 +13,6 @@ class DrawingBoardPainter extends CustomPainter {
       ..color = Colors.deepPurple
       ..isAntiAlias = true
       ..strokeWidth = 3;
-
     for (var i = 0; i < _offsets.length - 1; i++) {
       if (_offsets[i] != null && _offsets[i + 1] != null) {
         canvas.drawLine(_offsets[i], _offsets[i + 1], paint);
