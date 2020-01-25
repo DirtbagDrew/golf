@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class VideoSlider extends StatefulWidget {
-  VideoSlider(
-      {Key key,
-      this.duration: 0,
-      this.position: 0,
-      this.visible: false,
-      @required this.onChanged})
-      : super(key: key);
+  VideoSlider({
+    Key key,
+    @required this.onChanged,
+    this.duration: 0,
+    this.position: 0,
+    this.visible: false,
+  }) : super(key: key);
 
   final bool visible;
   final double duration;
@@ -23,8 +23,6 @@ class _VideoSliderState extends State<VideoSlider> {
   }
 
   Widget build(BuildContext context) {
-    // This example adds a green border on tap down.
-    // On tap up, the square changes to the opposite state.
     return Container(
       height: 30,
       child: AnimatedOpacity(
