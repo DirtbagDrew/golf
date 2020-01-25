@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
+import 'DrawingBoard.dart';
 import 'VideoSlider.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
@@ -114,7 +115,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                         child: AspectRatio(
                           aspectRatio: _controller.value.aspectRatio,
                           // Use the VideoPlayer widget to display the video.
-                          child: VideoPlayer(_controller),
+                          child: DrawingBoard(
+                            canvas: VideoPlayer(_controller),
+                          ),
                         ),
                       ),
                       VideoSlider(
