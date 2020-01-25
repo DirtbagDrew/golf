@@ -10,6 +10,13 @@ class DrawingBoard extends StatefulWidget {
 class _DrawingBoardState extends State<DrawingBoard> {
   final _offsets = <Offset>[];
 
+  bool isValidOffset(Offset offset, Size size) {
+    return offset.dx >= 0 &&
+        offset.dx <= size.width &&
+        offset.dy >= 0 &&
+        offset.dy <= size.height;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -18,7 +25,8 @@ class _DrawingBoardState extends State<DrawingBoard> {
             final renderBox = context.findRenderObject() as RenderBox;
             final localPosition =
                 renderBox.globalToLocal(details.globalPosition);
-            _offsets.add(localPosition);
+            if (isValidOffset(localPosition, renderBox.size))
+              _offsets.add(localPosition);
           });
         },
         onPanUpdate: (details) {
@@ -26,7 +34,9 @@ class _DrawingBoardState extends State<DrawingBoard> {
             final renderBox = context.findRenderObject() as RenderBox;
             final localPosition =
                 renderBox.globalToLocal(details.globalPosition);
-            _offsets.add(localPosition);
+            if (isValidOffset(localPosition, renderBox.size)) {
+              _offsets.add(localPosition);
+            }
           });
         },
         onPanEnd: (details) {
