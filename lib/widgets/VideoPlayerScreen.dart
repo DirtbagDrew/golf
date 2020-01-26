@@ -7,11 +7,15 @@ import 'VideoSlider.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   VideoPlayerScreen(
-      {Key key, this.videoString: 'assets/tiger.mp4', this.videoType: 'asset'})
+      {Key key,
+      @required this.videoString,
+      @required this.videoType,
+      @required this.orientation})
       : super(key: key);
 
   final String videoString;
   final String videoType;
+  final Orientation orientation;
 
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
@@ -117,6 +121,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           // Use the VideoPlayer widget to display the video.
                           child: DrawingBoard(
                             child: VideoPlayer(_controller),
+                            orientation: widget.orientation
                           ),
                         ),
                       ),

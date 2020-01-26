@@ -44,19 +44,24 @@ class _VideoPageScreenState extends State<VideoPageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-          constraints: BoxConstraints(
-              maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: VideoPlayerScreen(
-                  videoString: _videoString,
-                  videoType: _videoType,
-                ),
-              )
-            ],
-          ),
+        body: OrientationBuilder(
+          builder: (context, orientation) {
+            return Container(
+              constraints: BoxConstraints(
+                  maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: VideoPlayerScreen(
+                      videoString: _videoString,
+                      videoType: _videoType,
+                      orientation: orientation,
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
         ),
         floatingActionButton: VideoSelector(
           selectedVideo: _pickVideo,
