@@ -37,56 +37,69 @@ class _VideoPageScreenState extends State<VideoPageContent> {
 
   @override
   Widget build(BuildContext context) {
+    var scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      appBar: AppBar(title: Text('sup')),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        key: scaffoldKey,
+        // appBar: AppBar(title: Text('sup')),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              Container(
+                  height: 300,
+                  child: DrawerHeader(
+                    child: VideoSelectorRadial(
+                      selectedVideo: _pickVideo,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )),
+              ListTile(
+                title: Text('hi'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+        body: Stack(
           children: <Widget>[
-            Container(
-                height: 300,
-                child: DrawerHeader(
-                  child: VideoSelectorRadial(
-                    selectedVideo: _pickVideo,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                )),
-            ListTile(
-              title: Text('hi'),
-              onTap: () {
-                Navigator.pop(context);
-              },
+            Positioned(
+              left: 10,
+              top: 20,
+              child: IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () => scaffoldKey.currentState.openDrawer(),
+              ),
             ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {
-                Navigator.pop(context);
+            OrientationBuilder(
+              builder: (context, orientation) {
+                return Container(
+                  constraints: BoxConstraints(
+                      maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: VideoPlayerScreen(
+                          videoString: _videoString,
+                          videoType: _videoType,
+                          orientation: orientation,
+                        ),
+                      )
+                    ],
+                  ),
+                );
               },
             ),
           ],
-        ),
-      ),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          return Container(
-            constraints: BoxConstraints(
-                maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: VideoPlayerScreen(
-                    videoString: _videoString,
-                    videoType: _videoType,
-                    orientation: orientation,
-                  ),
-                )
-              ],
-            ),
-          );
-        },
-      ),
-    );
+        ));
   }
 }
