@@ -106,7 +106,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             children: <Widget>[
               Expanded(
                 child: Container(
-                  alignment: AlignmentDirectional.topCenter,
+                  alignment: AlignmentDirectional.center,
                   child: Stack(
                     alignment: AlignmentDirectional.bottomCenter,
                     children: <Widget>[
@@ -120,9 +120,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           aspectRatio: _controller.value.aspectRatio,
                           // Use the VideoPlayer widget to display the video.
                           child: DrawingBoard(
-                            child: VideoPlayer(_controller),
-                            orientation: widget.orientation
-                          ),
+                              child: VideoPlayer(_controller),
+                              orientation: widget.orientation),
                         ),
                       ),
                       VideoSlider(

@@ -1,12 +1,6 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import '../widgets/VideoSlider.dart';
-import '../widgets/VideoSelector.dart';
 import '../widgets/VideoPlayerScreen.dart';
+import 'package:golf_project/widgets/VideoSelectorRadial.dart';
 
 class VideoPage extends StatelessWidget {
   @override
@@ -44,27 +38,55 @@ class _VideoPageScreenState extends State<VideoPageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: OrientationBuilder(
-          builder: (context, orientation) {
-            return Container(
-              constraints: BoxConstraints(
-                  maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: VideoPlayerScreen(
-                      videoString: _videoString,
-                      videoType: _videoType,
-                      orientation: orientation,
-                    ),
-                  )
-                ],
-              ),
-            );
-          },
+      appBar: AppBar(title: Text('sup')),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Container(
+                height: 300,
+                child: DrawerHeader(
+                  child: VideoSelectorRadial(
+                    selectedVideo: _pickVideo,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                )),
+            ListTile(
+              title: Text('hi'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
-        floatingActionButton: VideoSelector(
-          selectedVideo: _pickVideo,
-        ));
+      ),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return Container(
+            constraints: BoxConstraints(
+                maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: VideoPlayerScreen(
+                    videoString: _videoString,
+                    videoType: _videoType,
+                    orientation: orientation,
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
