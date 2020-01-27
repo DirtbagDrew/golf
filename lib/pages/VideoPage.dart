@@ -50,7 +50,7 @@ class _VideoPageScreenState extends State<VideoPageContent> {
                     selectedVideo: _pickVideo,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                   ),
                 )),
             ListTile(
