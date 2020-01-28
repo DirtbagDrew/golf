@@ -24,50 +24,58 @@ class _DrawingBoardState extends State<DrawingBoard> {
         offset.dy <= size.height;
   }
 
+  _orientationChangePortrait(BoxConstraints boxConstraints) {
+    _boardPortraitWidth = boxConstraints.maxWidth;
+    _boardPortraitHeight = boxConstraints.maxHeight;
+    if (_boardLandscapeWidth != 0.0 &&
+        _boardLandscapeHeight != 0.0 &&
+        _offsets.length != 0) {
+      _offsets = _offsets.map((offset) {
+        if (offset != null) {
+          var dx = offset.dx * _boardPortraitWidth / _boardLandscapeWidth;
+          var dy = offset.dy * _boardPortraitHeight / _boardLandscapeHeight;
+          return Offset(dx, dy);
+        }
+        return null;
+      }).toList();
+    }
+  }
+
+  _orientationChangeLandscape(BoxConstraints boxConstraints) {
+    if (_boardLandscapeWidth == 0.0 && _boardLandscapeHeight == 0.0) {
+      _boardLandscapeWidth = boxConstraints.maxWidth;
+      _boardLandscapeHeight = boxConstraints.maxHeight;
+    }
+    if (_boardPortraitWidth != 0.0 &&
+        _boardPortraitHeight != 0.0 &&
+        _offsets.length != 0) {
+      _offsets = _offsets.map((offset) {
+        if (offset != null) {
+          var dx = offset.dx * _boardLandscapeWidth / _boardPortraitWidth;
+          var dy = offset.dy * _boardLandscapeHeight / _boardPortraitHeight;
+          return Offset(dx, dy);
+        }
+        return null;
+      }).toList();
+    }
+  }
+
+  _handleOrientationChange(BoxConstraints boxConstraints) {
+    if (widget.orientation != _currentOrientation) {
+      _currentOrientation = widget.orientation;
+      if (widget.orientation == Orientation.portrait) {
+        _orientationChangePortrait(boxConstraints);
+      } else {
+        _orientationChangeLandscape(boxConstraints);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (buildContext, context) {
-        if (widget.orientation != _currentOrientation) {
-          _currentOrientation = widget.orientation;
-          if (widget.orientation == Orientation.portrait) {
-            _boardPortraitWidth = context.maxWidth;
-            _boardPortraitHeight = context.maxHeight;
-            if (_boardLandscapeWidth != 0.0 &&
-                _boardLandscapeHeight != 0.0 &&
-                _offsets.length != 0) {
-              _offsets = _offsets.map((offset) {
-                if (offset != null) {
-                  var dx =
-                      offset.dx * _boardPortraitWidth / _boardLandscapeWidth;
-                  var dy =
-                      offset.dy * _boardPortraitHeight / _boardLandscapeHeight;
-                  return Offset(dx, dy);
-                }
-                return null;
-              }).toList();
-            }
-          } else {
-            if (_boardLandscapeWidth == 0.0 && _boardLandscapeHeight == 0.0) {
-              _boardLandscapeWidth = context.maxWidth;
-              _boardLandscapeHeight = context.maxHeight;
-            }
-            if (_boardPortraitWidth != 0.0 &&
-                _boardPortraitHeight != 0.0 &&
-                _offsets.length != 0) {
-              _offsets = _offsets.map((offset) {
-                if (offset != null) {
-                  var dx =
-                      offset.dx * _boardLandscapeWidth / _boardPortraitWidth;
-                  var dy =
-                      offset.dy * _boardLandscapeHeight / _boardPortraitHeight;
-                  return Offset(dx, dy);
-                }
-                return null;
-              }).toList();
-            }
-          }
-        }
+        _handleOrientationChange(context);
         return GestureDetector(
             onPanDown: (details) {
               setState(() {
