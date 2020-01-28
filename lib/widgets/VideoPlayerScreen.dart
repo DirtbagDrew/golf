@@ -24,7 +24,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   void initState() {
-    setVideo(widget.videoType, widget.videoString);
+    if (widget.videoType != '' && widget.videoString != '') {
+      setVideo(widget.videoType, widget.videoString);
+    }
     super.initState();
   }
 
@@ -96,52 +98,61 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          // If the VideoPlayerController has finished initialization, use
-          // the data it provides to limit the aspect ratio of the video.
-          return Column(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  alignment: AlignmentDirectional.center,
-                  child: Stack(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _visible = !_visible;
-                          });
-                        },
-                        child: AspectRatio(
-                          aspectRatio: _controller.value.aspectRatio,
-                          // Use the VideoPlayer widget to display the video.
-                          child: DrawingBoard(
-                              child: VideoPlayer(_controller),
-                              orientation: _getOrientation()),
+    if (widget.videoType != '' && widget.videoString != '') {
+      return FutureBuilder(
+        future: _initializeVideoPlayerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If the VideoPlayerController has finished initialization, use
+            // the data it provides to limit the aspect ratio of the video.
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    alignment: AlignmentDirectional.center,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _visible = !_visible;
+                            });
+                          },
+                          child: AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            // Use the VideoPlayer widget to display the video.
+                            child: DrawingBoard(
+                                child: VideoPlayer(_controller),
+                                orientation: _getOrientation()),
+                          ),
                         ),
-                      ),
-                      VideoSlider(
-                        onChanged: updatePosition,
-                        position: getPosition(),
-                        duration: getDuration(),
-                        visible: _visible,
-                      )
-                    ],
+                        VideoSlider(
+                          onChanged: updatePosition,
+                          position: getPosition(),
+                          duration: getDuration(),
+                          visible: _visible,
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          );
-        } else {
-          // If the VideoPlayerController is still initializing, show a
-          // loading spinner.
-          return Center(child: CircularProgressIndicator());
-        }
-      },
-    );
+              ],
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      );
+    } else {
+      return Center(
+        child: Container(
+          height: 300,
+          color: Colors.grey,
+          alignment: Alignment.center,
+          child: Text('Select a video to get started!'),
+        ),
+      );
+    }
   }
 }

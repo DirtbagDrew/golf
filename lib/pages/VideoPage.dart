@@ -17,8 +17,8 @@ class VideoPageContent extends StatefulWidget {
 }
 
 class _VideoPageScreenState extends State<VideoPageContent> {
-  String _videoString = 'assets/tiger.mp4';
-  String _videoType = 'asset';
+  String _videoString = '';
+  String _videoType = '';
 
   double _deviceHeight() {
     return MediaQuery.of(context).size.height;
