@@ -7,15 +7,11 @@ import 'VideoSlider.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   VideoPlayerScreen(
-      {Key key,
-      @required this.videoString,
-      @required this.videoType,
-      @required this.orientation})
+      {Key key, @required this.videoString, @required this.videoType})
       : super(key: key);
 
   final String videoString;
   final String videoType;
-  final Orientation orientation;
 
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
@@ -94,6 +90,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     });
   }
 
+  Orientation _getOrientation() {
+    return MediaQuery.of(context).orientation;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -121,7 +121,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           // Use the VideoPlayer widget to display the video.
                           child: DrawingBoard(
                               child: VideoPlayer(_controller),
-                              orientation: widget.orientation),
+                              orientation: _getOrientation()),
                         ),
                       ),
                       VideoSlider(

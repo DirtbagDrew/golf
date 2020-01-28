@@ -37,10 +37,7 @@ class _VideoPageScreenState extends State<VideoPageContent> {
 
   @override
   Widget build(BuildContext context) {
-    var scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-        key: scaffoldKey,
-        // appBar: AppBar(title: Text('sup')),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -55,51 +52,38 @@ class _VideoPageScreenState extends State<VideoPageContent> {
                       color: Theme.of(context).primaryColor,
                     ),
                   )),
-              ListTile(
-                title: Text('hi'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
             ],
           ),
         ),
-        body: Stack(
-          children: <Widget>[
-            Positioned(
-              left: 10,
-              top: 20,
-              child: IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () => scaffoldKey.currentState.openDrawer(),
+        body: new Builder(builder: (context) {
+          return new Stack(
+            children: <Widget>[
+              Positioned(
+                left: 10,
+                top: 20,
+                child: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
               ),
-            ),
-            OrientationBuilder(
-              builder: (context, orientation) {
-                return Container(
-                  constraints: BoxConstraints(
-                      maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: VideoPlayerScreen(
-                          videoString: _videoString,
-                          videoType: _videoType,
-                          orientation: orientation,
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ));
+              Container(
+                constraints: BoxConstraints(
+                    maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: VideoPlayerScreen(
+                        videoString: _videoString,
+                        videoType: _videoType,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          );
+        }));
   }
 }
