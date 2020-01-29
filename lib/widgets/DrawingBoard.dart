@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:golf_project/widgets/DrawingBoardPainter.dart';
 
 class DrawingBoard extends StatefulWidget {
-  DrawingBoard({Key key, @required this.child, @required this.orientation})
+  DrawingBoard(
+      {Key key,
+      @required this.child,
+      @required this.orientation,
+      @required this.isErase})
       : super(key: key);
   Widget child;
   Orientation orientation;
+  bool isErase;
   _DrawingBoardState createState() => _DrawingBoardState();
 }
 
@@ -73,6 +78,9 @@ class _DrawingBoardState extends State<DrawingBoard> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isErase) {
+      _offsets = [];
+    }
     return LayoutBuilder(
       builder: (buildContext, context) {
         _handleOrientationChange(context);

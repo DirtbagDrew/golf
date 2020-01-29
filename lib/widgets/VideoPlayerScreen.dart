@@ -7,11 +7,15 @@ import 'VideoSlider.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   VideoPlayerScreen(
-      {Key key, @required this.videoString, @required this.videoType})
+      {Key key,
+      @required this.videoString,
+      @required this.videoType,
+      @required this.isErase})
       : super(key: key);
 
   final String videoString;
   final String videoType;
+  final bool isErase;
 
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
@@ -124,7 +128,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                             // Use the VideoPlayer widget to display the video.
                             child: DrawingBoard(
                                 child: VideoPlayer(_controller),
-                                orientation: _getOrientation()),
+                                orientation: _getOrientation(),
+                                isErase: widget.isErase),
                           ),
                         ),
                         VideoSlider(
@@ -147,10 +152,30 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     } else {
       return Center(
         child: Container(
+          margin: EdgeInsets.all(16.0),
           height: 300,
-          color: Colors.grey,
-          alignment: Alignment.center,
-          child: Text('Select a video to get started!'),
+          child: Card(
+            color: Colors.grey[300],
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
+                bottomLeft: Radius.circular(16.0),
+                bottomRight: Radius.circular(16.0),
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Center(
+                child: Text(
+                  'Select a video to get started!',
+                  style: Theme.of(context).textTheme.display1,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
         ),
       );
     }

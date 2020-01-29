@@ -19,6 +19,7 @@ class VideoPageContent extends StatefulWidget {
 class _VideoPageScreenState extends State<VideoPageContent> {
   String _videoString = '';
   String _videoType = '';
+  bool isErase = false;
 
   double _deviceHeight() {
     return MediaQuery.of(context).size.height;
@@ -58,8 +59,22 @@ class _VideoPageScreenState extends State<VideoPageContent> {
         body: new Builder(builder: (context) {
           return new Stack(
             children: <Widget>[
+              Container(
+                constraints: BoxConstraints(
+                    maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: VideoPlayerScreen(
+                          videoString: _videoString,
+                          videoType: _videoType,
+                          isErase: isErase),
+                    )
+                  ],
+                ),
+              ),
               Positioned(
-                left: 10,
+                left: 20,
                 top: 20,
                 child: IconButton(
                   icon: Icon(Icons.menu),
@@ -68,20 +83,22 @@ class _VideoPageScreenState extends State<VideoPageContent> {
                   },
                 ),
               ),
-              Container(
-                constraints: BoxConstraints(
-                    maxHeight: _deviceHeight(), maxWidth: _deviceWidth()),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: VideoPlayerScreen(
-                        videoString: _videoString,
-                        videoType: _videoType,
+              Positioned(
+                  right: 20,
+                  bottom: 20,
+                  child: Column(
+                    children: <Widget>[
+                      Text('Erase'),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          setState(() {
+                            isErase = true;
+                          });
+                        },
                       ),
-                    )
-                  ],
-                ),
-              )
+                    ],
+                  )),
             ],
           );
         }));
