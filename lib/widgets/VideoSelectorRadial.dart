@@ -49,11 +49,11 @@ class RadialAnimation extends StatefulWidget {
                 parent: controller,
                 curve: Interval(0.0, 0.7, curve: Curves.decelerate))),
         super(key: key);
-  final ValueChanged<String> selectedVideo;
-  final AnimationController controller;
+  final Animation<double> rotation;
   final Animation<double> scale;
   final Animation<double> translation;
-  final Animation<double> rotation;
+  final AnimationController controller;
+  final ValueChanged<String> selectedVideo;
 
   @override
   _RadialAnimationState createState() => _RadialAnimationState();
@@ -61,7 +61,7 @@ class RadialAnimation extends StatefulWidget {
 
 class _RadialAnimationState extends State<RadialAnimation> {
   bool _isShowText = true;
-  String label = 'Select video option';
+  String _label = 'Select video option';
 
   build(context) {
     return AnimatedBuilder(
@@ -72,7 +72,7 @@ class _RadialAnimationState extends State<RadialAnimation> {
             children: <Widget>[
               Align(
                 alignment: Alignment(0, -.5),
-                child: _isShowText ? Text(label) : null,
+                child: _isShowText ? Text(_label) : null,
               ),
               Container(
                 height: 300,
@@ -122,17 +122,8 @@ class _RadialAnimationState extends State<RadialAnimation> {
         });
   }
 
-  void _pickVideo(String source) async {
-    _close();
-    File video = source == 'gallery'
-        ? await ImagePicker.pickVideo(source: ImageSource.gallery)
-        : await ImagePicker.pickVideo(source: ImageSource.camera);
-    if (video != null) {
-      widget.selectedVideo(video.path);
-    }
-  }
-
-  _buildButton(double angle, {Color color, IconData icon, String source}) {
+  Widget _buildButton(double angle,
+      {Color color, IconData icon, String source}) {
     final double rad = VectorMath.radians(angle);
     return Container(
       child: Transform(
@@ -149,13 +140,23 @@ class _RadialAnimationState extends State<RadialAnimation> {
     );
   }
 
-  _open() {
+  void _close() {
+    _isShowText = true;
+    widget.controller.reverse();
+  }
+
+  void _open() {
     _isShowText = false;
     widget.controller.forward();
   }
 
-  _close() {
-    _isShowText = true;
-    widget.controller.reverse();
+  void _pickVideo(String source) async {
+    _close();
+    File video = source == 'gallery'
+        ? await ImagePicker.pickVideo(source: ImageSource.gallery)
+        : await ImagePicker.pickVideo(source: ImageSource.camera);
+    if (video != null) {
+      widget.selectedVideo(video.path);
+    }
   }
 }
