@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/VideoPlayerScreen.dart';
 import 'package:golf_project/widgets/VideoSelectorRadial.dart';
+import 'package:flutter/scheduler.dart';
 
 class VideoPage extends StatelessWidget {
   @override
@@ -37,9 +38,9 @@ class _VideoPageScreenState extends State<VideoPageContent> {
   }
 
   void _onEraseConfirmed(bool b) {
-    setState(() {
-      isErase = b;
-    });
+    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
+          isErase = !b;
+        }));
   }
 
   @override
