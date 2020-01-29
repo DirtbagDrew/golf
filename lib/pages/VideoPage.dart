@@ -91,22 +91,24 @@ class _VideoPageScreenState extends State<VideoPageContent> {
                   },
                 ),
               ),
-              Positioned(
-                  right: 20,
-                  bottom: 20,
-                  child: Column(
-                    children: <Widget>[
-                      Text('Erase'),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            isErase = true;
-                          });
-                        },
-                      ),
-                    ],
-                  )),
+              _videoString == ''
+                  ? Container()
+                  : Positioned(
+                      right: 20,
+                      bottom: 20,
+                      child: Column(
+                        children: <Widget>[
+                          Text('Erase'),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                isErase = true;
+                              });
+                            },
+                          ),
+                        ],
+                      )),
             ],
           );
         }));
