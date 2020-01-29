@@ -44,6 +44,11 @@ class RadialAnimation extends StatefulWidget {
         translation = Tween<double>(begin: 0.0, end: 100.0).animate(
           CurvedAnimation(parent: controller, curve: Curves.elasticOut),
         ),
+        textBounceIn = Tween<double>(begin: 1.0, end: 1.4).animate(
+          CurvedAnimation(
+              parent: controller,
+              curve: Interval(0, 1, curve: Curves.bounceIn)),
+        ),
         rotation = Tween<double>(begin: 0.0, end: 360.0).animate(
             CurvedAnimation(
                 parent: controller,
@@ -53,6 +58,7 @@ class RadialAnimation extends StatefulWidget {
   final Animation<double> scale;
   final Animation<double> translation;
   final AnimationController controller;
+  final Animation<double> textBounceIn;
   final ValueChanged<String> selectedVideo;
 
   @override
@@ -72,7 +78,12 @@ class _RadialAnimationState extends State<RadialAnimation> {
             children: <Widget>[
               Align(
                 alignment: Alignment(0, -.5),
-                child: _isShowText ? Text(_label) : null,
+                child: _isShowText
+                    ? Transform.scale(
+                        scale: widget.textBounceIn.value,
+                        child: Text(_label),
+                      )
+                    : null,
               ),
               Container(
                 height: 300,
