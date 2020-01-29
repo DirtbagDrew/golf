@@ -10,12 +10,14 @@ class VideoPlayerScreen extends StatefulWidget {
       {Key key,
       @required this.videoString,
       @required this.videoType,
-      @required this.isErase})
+      @required this.isErase,
+      @required this.eraseConfirmed})
       : super(key: key);
 
   final String videoString;
   final String videoType;
   final bool isErase;
+  final ValueChanged<bool> eraseConfirmed;
 
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
@@ -100,6 +102,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     return MediaQuery.of(context).orientation;
   }
 
+  _onEraseConfirmed(bool b) {
+    widget.eraseConfirmed(b);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.videoType != '' && widget.videoString != '') {
@@ -127,9 +133,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                             aspectRatio: _controller.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
                             child: DrawingBoard(
-                                child: VideoPlayer(_controller),
-                                orientation: _getOrientation(),
-                                isErase: widget.isErase),
+                              child: VideoPlayer(_controller),
+                              orientation: _getOrientation(),
+                              isErase: widget.isErase,
+                              eraseConfirmed: _onEraseConfirmed,
+                            ),
                           ),
                         ),
                         VideoSlider(

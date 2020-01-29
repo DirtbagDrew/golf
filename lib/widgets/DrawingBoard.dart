@@ -6,11 +6,14 @@ class DrawingBoard extends StatefulWidget {
       {Key key,
       @required this.child,
       @required this.orientation,
-      @required this.isErase})
+      @required this.isErase,
+      @required this.eraseConfirmed})
       : super(key: key);
-  Widget child;
-  Orientation orientation;
   bool isErase;
+  final ValueChanged<bool> eraseConfirmed;
+  Orientation orientation;
+  Widget child;
+
   _DrawingBoardState createState() => _DrawingBoardState();
 }
 
@@ -80,6 +83,7 @@ class _DrawingBoardState extends State<DrawingBoard> {
   Widget build(BuildContext context) {
     if (widget.isErase) {
       _offsets = [];
+      widget.eraseConfirmed(true);
     }
     return LayoutBuilder(
       builder: (buildContext, context) {

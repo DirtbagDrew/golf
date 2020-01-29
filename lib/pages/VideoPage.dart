@@ -36,6 +36,12 @@ class _VideoPageScreenState extends State<VideoPageContent> {
     });
   }
 
+  void _onEraseConfirmed(bool b) {
+    setState(() {
+      isErase = b;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,9 +72,11 @@ class _VideoPageScreenState extends State<VideoPageContent> {
                   children: <Widget>[
                     Expanded(
                       child: VideoPlayerScreen(
-                          videoString: _videoString,
-                          videoType: _videoType,
-                          isErase: isErase),
+                        videoString: _videoString,
+                        videoType: _videoType,
+                        isErase: isErase,
+                        eraseConfirmed: _onEraseConfirmed,
+                      ),
                     )
                   ],
                 ),
